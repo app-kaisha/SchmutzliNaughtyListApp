@@ -19,9 +19,20 @@ struct ListView: View {
         NavigationStack{
             List {
                 ForEach(children) { child in
-                    Text("\(child.firstName) \(child.lastName)")
+                    HStack{
+                        NavigationLink {
+                            DetailView(child: child)
+                        } label: {
+                            Image(child.naughty ? "naughty" : "nice")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 30)
+                            Text("\(child.firstName) \(child.lastName)")
+                                .font(.title2)
+                        }
+                    }
                 }
-                .font(.title2)
+                
             }
             .listStyle(.plain)
             .navigationTitle("Schmutzli's List")
