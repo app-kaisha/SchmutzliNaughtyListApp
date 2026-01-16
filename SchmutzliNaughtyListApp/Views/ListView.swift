@@ -9,11 +9,13 @@
 import SwiftUI
 import SwiftData
 
+
 struct ListView: View {
     
     @Environment(\.modelContext) private var modelContext
     @Query private var children: [Child]
     
+    @State private var isSheetVisible = false
     
     var body: some View {
         NavigationStack{
@@ -32,12 +34,37 @@ struct ListView: View {
                         }
                     }
                 }
+                .onDelete { indexSet in
+                    indexSet.forEach({modelContext.delete(children[$0])})
+                    // force save for simulator
+                    guard let _ = try? modelContext.save() else {
+                        print("😡 ERROR: Save after .onDelete on ToDoListView did not work!")
+                        return
+                    }
+                }
                 
             }
             .listStyle(.plain)
             .navigationTitle("Schmutzli's List")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        isSheetVisible.toggle()
+                    } label: {
+                        Image(systemName: "plus")
+                            .font(.title)
+                    }
+
+                }
+            }
+            .sheet(isPresented: $isSheetVisible) {
+                NavigationStack {
+                    DetailView(child: Child())
+                }
+            }
         }
     }
+    
 }
 
 #Preview {
