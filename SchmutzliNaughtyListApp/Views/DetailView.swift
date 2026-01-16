@@ -33,12 +33,13 @@ struct DetailView: View {
                 .bold()
             TextField("first", text: $firstName)
                 .textFieldStyle(.roundedBorder)
+                .autocorrectionDisabled()
             Text("Last Name:")
                 .bold()
             TextField("last", text: $lastName)
                 .textFieldStyle(.roundedBorder)
+                .autocorrectionDisabled()
             Toggle("Naughty?", isOn: $naughty)
-                .textFieldStyle(.roundedBorder)
                 .bold()
                 .onChange(of: naughty) {
                     // toggle on & smacks = 0, then 1 else running total
@@ -59,6 +60,7 @@ struct DetailView: View {
                 .bold()
             TextField("notes", text: $notes, axis: .vertical)
                 .textFieldStyle(.roundedBorder)
+                .autocorrectionDisabled()
             
             Spacer()
             HStack {
@@ -68,6 +70,10 @@ struct DetailView: View {
                     .scaledToFit()
                     .scaleEffect(animateBoy ? 1.0 : 0.9)
                     .onTapGesture {
+                        if audioPlayer != nil && audioPlayer.isPlaying {
+                            //audioPlayer.stop()
+                            return
+                        }
                         playSound(soundName: "smack")
                         animateBoy = false
                         withAnimation(.spring(response: 0.3, dampingFraction: 0.3)) {
@@ -80,6 +86,10 @@ struct DetailView: View {
                     .scaledToFit()
                     .scaleEffect(animateGirl ? 1.0 : 0.9)
                     .onTapGesture {
+                        if audioPlayer != nil && audioPlayer.isPlaying {
+                            //audioPlayer.stop()
+                            return
+                        }
                         playSound(soundName: "smack")
                         animateGirl = false
                         withAnimation(.spring(response: 0.3, dampingFraction: 0.3)) {
